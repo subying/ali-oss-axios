@@ -1,0 +1,41 @@
+{
+  "name": "ali-oss-axios",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "scripts": {
+    "test": "",
+    "tsc": "npm run tsc:clean && npm run tsc:build",
+    "tsc:build": "tsc -b tsconfig.json tsconfig-cjs.json",
+    "tsc:watch": "tsc -b tsconfig.json tsconfig-cjs.json --watch",
+    "tsc:clean": "tsc -b tsconfig.json tsconfig-cjs.json --clean "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/subying/ali-oss-axios.git"
+  },
+  "keywords": [
+    "ali-oss",
+    "axios",
+    "upload",
+    "file"
+  ],
+  "author": "subying",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/subying/ali-oss-axios/issues"
+  },
+  "homepage": "https://github.com/subying/ali-oss-axios#readme",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "axios": "^0.23.0",
+    "buffer": "^6.0.3",
+    "dateformat": "^5.0.2"
+  }
+}
