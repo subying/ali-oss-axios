@@ -1,14 +1,16 @@
 {
   "name": "ali-oss-axios",
-  "version": "1.0.0",
+  "version": "0.0.3",
   "description": "",
-  "main": "lib/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "files": [
-    "lib",
     "dist"
   ],
   "scripts": {
     "test": "",
+    "build": "npm run tsc && rollup -c",
     "tsc": "npm run tsc:clean && npm run tsc:build",
     "tsc:build": "tsc -b tsconfig.json tsconfig-cjs.json",
     "tsc:watch": "tsc -b tsconfig.json tsconfig-cjs.json --watch",
@@ -31,6 +33,13 @@
   },
   "homepage": "https://github.com/subying/ali-oss-axios#readme",
   "devDependencies": {
+    "@lopatnov/rollup-plugin-uglify": "^2.1.1",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-typescript": "^8.3.0",
+    "rollup": "^2.58.0",
+    "rollup-pluginutils": "^2.8.2",
+    "tslib": "^2.3.1",
     "typescript": "^4.4.4"
   },
   "dependencies": {

@@ -13,7 +13,7 @@ interface AxiosOssOption {
         stsToken: string;
     }>;
 }
-export default class AxiosOss {
+export declare class AliOssAxios {
     constructor(option: AxiosOssOption);
     region: string;
     accessKeyId: string;
@@ -29,6 +29,18 @@ export default class AxiosOss {
         stsToken: string;
     }>;
     refreshTime: number;
+    /**
+     * 刷新token
+     */
+    private refresh;
+    /**
+     * 生成签名
+     * @param path 上传路径
+     * @param file 上传文件
+     * @param expires 日期 GMT格式
+     * @returns 签名
+     */
+    private createSign;
     put(path: string, file: File): Promise<unknown>;
 }
-export {};
+export default AliOssAxios;

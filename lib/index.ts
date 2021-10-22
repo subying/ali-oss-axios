@@ -20,7 +20,7 @@ interface AxiosOssOption {
     }>
 }
 
-export default class AxiosOss {
+export class AliOssAxios {
     constructor(option: AxiosOssOption) {
         this.region = option.region;
         this.accessKeyId = option.accessKeyId;
@@ -58,7 +58,10 @@ export default class AxiosOss {
 
     refreshTime = 0;
 
-    async put(path: string, file: File) {
+    /**
+     * 刷新token
+     */
+    private async refresh () {
         if (Date.now() - this.refreshTime >= this.refreshSTSTokenInterval) {
             const res = await this.refreshSTSToken();
             this.accessKeyId = res.accessKeyId;
@@ -66,10 +69,17 @@ export default class AxiosOss {
             this.stsToken = res.stsToken;
             this.refreshTime = Date.now();
         }
-        const url = `https://${this.bucket}.${this.endpoint}/${path}`;
+    }
+
+    /**
+     * 生成签名
+     * @param path 上传路径
+     * @param file 上传文件
+     * @param expires 日期 GMT格式
+     * @returns 签名
+     */
+    private createSign(path: string, file: File, expires: string) {
         const signature = crypto.createHmac('sha1', this.accessKeySecret);
-        const date = new Date();
-        const expires = dateformat(date, 'UTC:ddd, dd mmm yyyy HH:MM:ss \'GMT\'');
         const signatureContent = [
             'put'.toUpperCase(),
             '',
@@ -80,9 +90,19 @@ export default class AxiosOss {
             `/${this.bucket}/${path}`,
         ];
         const sign = signature.update(Buffer.from(signatureContent.join('\n'), this.headerEncoding)).digest('base64');
-        console.log(url);
-        console.log(sign, file.type);
-        console.log(`/${this.bucket}/${path}`);
+
+        return sign;
+    }
+
+    async put(path: string, file: File) {
+        this.refresh();
+        const url = `https://${this.bucket}.${this.endpoint}/${path}`;
+        const date = new Date();
+        const expires = dateformat(date, 'UTC:ddd, dd mmm yyyy HH:MM:ss \'GMT\'');
+        const sign = this.createSign(path, file, expires);
+        // console.log(url);
+        // console.log(sign, file.type);
+        // console.log(`/${this.bucket}/${path}`);
         return new Promise((resolve, reject) => {
             axios.put(url, file, {
                 headers: {
@@ -105,3 +125,5 @@ export default class AxiosOss {
     //     //
     // }
 }
+
+export default AliOssAxios;
