@@ -30,7 +30,7 @@ export class AliOssAxios {
         this.stsToken = option.stsToken;
         this.endpoint = option.endpoint;
         this.bucket = option.bucket;
-        this.refreshSTSTokenInterval = option.refreshSTSTokenInterval;
+        this.refreshSTSTokenInterval = option.refreshSTSTokenInterval || this.refreshSTSTokenInterval;
         this.refreshSTSToken = option.refreshSTSToken;
 
         this.refreshTime = Date.now();
@@ -62,10 +62,12 @@ export class AliOssAxios {
     private async refresh () {
         if (Date.now() - this.refreshTime >= this.refreshSTSTokenInterval) {
             const res = await this.refreshSTSToken();
-            this.accessKeyId = res.accessKeyId;
-            this.accessKeySecret = res.accessKeySecret;
-            this.stsToken = res.stsToken;
-            this.refreshTime = Date.now();
+            if (res.accessKeyId && res.accessKeySecret && res.stsToken) {
+                this.accessKeyId = res.accessKeyId;
+                this.accessKeySecret = res.accessKeySecret;
+                this.stsToken = res.stsToken;
+                this.refreshTime = Date.now();
+            }
         }
     }
 
@@ -93,7 +95,7 @@ export class AliOssAxios {
     }
 
     async put(path: string, file: File): Promise<{ url: string }> {
-        this.refresh();
+        await this.refresh();
         const url = `https://${this.bucket}.${this.endpoint}/${path}`;
         const date = new Date();
         const expires = dateformat(date, 'UTC:ddd, dd mmm yyyy HH:MM:ss \'GMT\'');
