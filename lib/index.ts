@@ -5,6 +5,12 @@ import crypto from './crypto/crypto';
 
 type BufferEncoding = 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex';
 
+type RereshTokenFn = () => Promise<{
+    accessKeyId: string;
+    accessKeySecret: string;
+    stsToken: string;
+}>;
+
 interface AxiosOssOption {
     region: string;
     accessKeyId: string;
@@ -13,11 +19,7 @@ interface AxiosOssOption {
     endpoint: string;
     bucket: string;
     refreshSTSTokenInterval: number;
-    refreshSTSToken: () => Promise<{
-        accessKeyId: string;
-        accessKeySecret: string;
-        stsToken: string;
-    }>
+    refreshSTSToken: RereshTokenFn;
 }
 
 export class AliOssAxios {
@@ -50,11 +52,7 @@ export class AliOssAxios {
 
     refreshSTSTokenInterval: number = 60 * 1000; // 默认一分钟
 
-    refreshSTSToken: () => Promise<{
-        accessKeyId: string;
-        accessKeySecret: string;
-        stsToken: string;
-    }>;
+    refreshSTSToken: RereshTokenFn;
 
     refreshTime = 0;
 
@@ -94,7 +92,7 @@ export class AliOssAxios {
         return sign;
     }
 
-    async put(path: string, file: File) {
+    async put(path: string, file: File): Promise<{ url: string }> {
         this.refresh();
         const url = `https://${this.bucket}.${this.endpoint}/${path}`;
         const date = new Date();
@@ -125,5 +123,3 @@ export class AliOssAxios {
     //     //
     // }
 }
-
-export default AliOssAxios;

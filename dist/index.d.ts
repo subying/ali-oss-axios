@@ -1,4 +1,9 @@
 declare type BufferEncoding = 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'latin1' | 'binary' | 'hex';
+declare type RereshTokenFn = () => Promise<{
+    accessKeyId: string;
+    accessKeySecret: string;
+    stsToken: string;
+}>;
 interface AxiosOssOption {
     region: string;
     accessKeyId: string;
@@ -7,11 +12,7 @@ interface AxiosOssOption {
     endpoint: string;
     bucket: string;
     refreshSTSTokenInterval: number;
-    refreshSTSToken: () => Promise<{
-        accessKeyId: string;
-        accessKeySecret: string;
-        stsToken: string;
-    }>;
+    refreshSTSToken: RereshTokenFn;
 }
 export declare class AliOssAxios {
     constructor(option: AxiosOssOption);
@@ -23,11 +24,7 @@ export declare class AliOssAxios {
     bucket: string;
     headerEncoding: BufferEncoding;
     refreshSTSTokenInterval: number;
-    refreshSTSToken: () => Promise<{
-        accessKeyId: string;
-        accessKeySecret: string;
-        stsToken: string;
-    }>;
+    refreshSTSToken: RereshTokenFn;
     refreshTime: number;
     /**
      * 刷新token
@@ -41,6 +38,8 @@ export declare class AliOssAxios {
      * @returns 签名
      */
     private createSign;
-    put(path: string, file: File): Promise<unknown>;
+    put(path: string, file: File): Promise<{
+        url: string;
+    }>;
 }
-export default AliOssAxios;
+export {};
