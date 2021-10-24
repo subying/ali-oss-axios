@@ -43,3 +43,18 @@ export const uploadOSS = async ({ file }: { file: File }) => {
     return aliyunOSS.put(path, file);
 };
 ```
+
+### 生成下载的文件url
+```typescript
+export const getOSSDownloadUrl = async (url: string, fileName: string) => {
+    const aliyunOSS = await getOSSInstance();
+    // 配置响应头实现通过URL访问时自动下载文件，并设置下载后的文件名。
+    const response = {
+        'content-disposition': `attachment; filename=${encodeURIComponent(fileName)}`, // 自定义下载后的文件名。
+    };
+    // 填写Object完整路径。Object完整路径中不能包含Bucket名称。
+    url = url.replace(/^http.*\.aliyuncs\.com\//, '');
+    url = decodeURIComponent(url);
+    return aliyunOSS.signatureUrl(url, { response });
+};
+```
