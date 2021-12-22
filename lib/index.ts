@@ -214,7 +214,11 @@ export class AliOssAxios {
             Signature: sign,
         };
 
-        let urlParams = `OSSAccessKeyId=${query.OSSAccessKeyId}&Expires=${query.Expires}&Signature=${query.Signature}`;
+        let urlParams = '';
+
+        Object.keys(query).forEach((k) => {
+            urlParams += `&${k}=${encodeURIComponent(query[k])}`;
+        });
         Object.keys(resourcePathParams).forEach((k) => {
             urlParams += `&${k}=${encodeURIComponent(resourcePathParams[k])}`;
         });
