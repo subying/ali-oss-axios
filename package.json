@@ -1,9 +1,9 @@
 {
   "name": "ali-oss-axios",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
-  "main": "lib/index.ts",
-  "module": "lib/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
