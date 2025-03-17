@@ -1,4 +1,4 @@
-declare type RereshTokenFn = () => Promise<{
+type RereshTokenFn = () => Promise<{
     accessKeyId: string;
     accessKeySecret: string;
     stsToken: string;
@@ -49,9 +49,10 @@ export declare class AliOssAxios {
      * 上传
      * @param path 资源路径
      * @param file 文件
+     * @param extraHeaders 拓展 headers
      * @returns
      */
-    put(path: string, file: File): Promise<{
+    put(path: string, file: File, extraHeaders?: Record<string, string>): Promise<{
         url: string;
     }>;
     /**
