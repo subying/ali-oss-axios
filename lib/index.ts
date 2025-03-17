@@ -151,9 +151,10 @@ export class AliOssAxios {
      * 上传
      * @param path 资源路径
      * @param file 文件
+     * @param extraHeaders 拓展 headers
      * @returns 
      */
-    async put(path: string, file: File): Promise<{ url: string }> {
+    async put(path: string, file: File, extraHeaders: Record<string, string> = {}): Promise<{ url: string }> {
         await this.refresh();
         const url = `https://${this.bucket}.${this.endpoint}/${path}`;
         const date = new Date();
@@ -164,6 +165,7 @@ export class AliOssAxios {
             authorization: '',
             'x-oss-date': expires,
             'x-oss-security-token': this.stsToken,
+            ...extraHeaders,
         };
         const sign = this.createSign(this.getResourcePath(path), {}, headers, expires);
         headers.authorization = `OSS ${this.accessKeyId}:${sign}`;
